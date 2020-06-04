@@ -14,10 +14,10 @@ let
             doctemplates = newH.callHackage "doctemplates" "0.8.2" {};
             hslua = newH.callHackage "hslua" "1.1.0" {};
             jira-wiki-markup = newH.callHackage "jira-wiki-markup" "1.3.0" {};
-            pandoc-types = newH.callPackage ./nix/pandoc-types.nix {};
+            pandoc-types = newH.callPackage ./pandoc-types.nix {};
           });
         };
       })];
     };
 in
-  pkgs.haskellPackages.callPackage ./default.nix { }
+  pkgs.haskellPackages.callPackage ./pandoc.nix { }
