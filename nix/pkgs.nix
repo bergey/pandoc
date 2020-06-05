@@ -1,3 +1,5 @@
+{
+  extras = hackage:
     {
       packages = {
         "texmath" = (((hackage.texmath)."0.12.0.2").revisions).default;

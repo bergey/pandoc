@@ -14,7 +14,7 @@ let
         inherit (snapshot) url rev sha256 fetchSubmodules;
       };
 
-    pkgs = import nixpgs (import haskell-nix-src);
+    pkgs = import nixpkgs (import haskell-nix-src {}).nixpkgsArgs;
     
     pkgSet = pkgs.haskell-nix.mkStackPkgSet {
       stack-pkgs = import ./pkgs.nix;
