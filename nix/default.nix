@@ -6,18 +6,21 @@ let
             inherit (snapshot) sha256;
             url = "https://github.com/${owner}/${repo}/archive/${rev}.tar.gz";
             };
-    pkgs = import nixpkgs {
-      overlays = [(self: super: {
-        haskellPackages = super.haskellPackages.override {
-          overrides = (newH: oldH: rec {
-            doclayout = newH.callHackage "doclayout" "0.3" {};
-            doctemplates = newH.callHackage "doctemplates" "0.8.2" {};
-            hslua = newH.callHackage "hslua" "1.1.0" {};
-            jira-wiki-markup = newH.callHackage "jira-wiki-markup" "1.3.0" {};
-            pandoc-types = newH.callPackage ./pandoc-types.nix {};
-          });
-        };
-      })];
+
+    haskell-nix-src =
+      let snapshot = builtins.fromJSON (builtins.readFile ./iohk-haskell-nix.json);
+      in (import nixpkgs {}).fetchgit {
+        name = "haskell-lib";
+        inherit (snapshot) url rev sha256 fetchSubmodules;
+      };
+
+    pkgs = import nixpgs (import haskell-nix-src);
+    
+    pkgSet = pkgs.haskell-nix.mkStackPkgSet {
+      stack-pkgs = import ./pkgs.nix;
+      pkg-def-extras = [];
+      modules = [];
     };
+
 in
-  pkgs.haskellPackages.callPackage ./pandoc.nix { }
+    pkgSet.config.hsPkgs
